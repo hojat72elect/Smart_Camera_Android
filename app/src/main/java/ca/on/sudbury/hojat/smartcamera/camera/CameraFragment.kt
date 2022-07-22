@@ -40,7 +40,7 @@ import ca.on.sudbury.hojat.smartcamera.utils.CameraTimer
 import ca.on.sudbury.hojat.smartcamera.utils.Constants
 import ca.on.sudbury.hojat.smartcamera.utils.Constants.ANIMATION_FAST_MILLIS
 import ca.on.sudbury.hojat.smartcamera.utils.Constants.ANIMATION_SLOW_MILLIS
-import ca.on.sudbury.hojat.smartcamera.utils.simulateClick
+import ca.on.sudbury.hojat.smartcamera.utils.extensions.simulateClick
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.coroutines.Dispatchers

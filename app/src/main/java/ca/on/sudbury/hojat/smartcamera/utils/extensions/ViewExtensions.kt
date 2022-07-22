@@ -1,4 +1,4 @@
-package ca.on.sudbury.hojat.smartcamera.utils
+package ca.on.sudbury.hojat.smartcamera.utils.extensions
 
 import android.os.Build
 import android.view.DisplayCutout

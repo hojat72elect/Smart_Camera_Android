@@ -1,7 +1,8 @@
-package ca.on.sudbury.hojat.smartcamera.utils
+package ca.on.sudbury.hojat.smartcamera.utils.extensions
 
 import android.app.Dialog
 import android.view.WindowManager
+import ca.on.sudbury.hojat.smartcamera.utils.Constants
 
 
 /** Same as show() on a dialog but also sets immersive mode in the dialog's window */
