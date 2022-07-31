@@ -52,9 +52,6 @@ import java.io.File
 import java.nio.ByteBuffer
 import java.util.*
 import java.util.concurrent.Executors
-import kotlin.math.abs
-import kotlin.math.max
-import kotlin.math.min
 
 /** Helper type alias used for analysis use case callbacks */
 typealias LumaListener = (luma: Double) -> Unit
@@ -274,12 +271,7 @@ class CameraFragment : Fragment() {
     /** Declare and bind preview, capture and analysis use cases */
     private fun bindCameraUseCases() {
 
-        // Get screen metrics used to setup camera for full screen resolution
-        val metrics = vm.windowManager.getCurrentWindowMetrics().bounds
-        Timber.d("Screen metrics: ${metrics.width()} x ${metrics.height()}")
-
-        val screenAspectRatio = aspectRatio(metrics.width(), metrics.height())
-        Timber.d("Preview aspect ratio: $screenAspectRatio")
+        val screenAspectRatio = vm.getAspectRatio()
 
         val rotation = binding.viewFinder.display.rotation
 
@@ -342,25 +334,6 @@ class CameraFragment : Fragment() {
         } catch (e: Exception) {
             Timber.e("Use case binding failed ${e.message}")
         }
-    }
-
-    /**
-     *  [androidx.camera.core.ImageAnalysis.Builder] requires enum value of
-     *  [androidx.camera.core.AspectRatio]. Currently it has values of 4:3 & 16:9.
-     *
-     *  Detecting the most suitable ratio for dimensions provided in @params by counting absolute
-     *  of preview ratio to one of the provided values.
-     *
-     *  @param width - preview width
-     *  @param height - preview height
-     *  @return suitable aspect ratio
-     */
-    private fun aspectRatio(width: Int, height: Int): Int {
-        val previewRatio = max(width, height).toDouble() / min(width, height)
-        if (abs(previewRatio - Constants.RATIO_4_3_VALUE) <= abs(previewRatio - Constants.RATIO_16_9_VALUE)) {
-            return AspectRatio.RATIO_4_3
-        }
-        return AspectRatio.RATIO_16_9
     }
 
     /** Method used to re-draw the camera UI controls, called every time configuration changes. */

@@ -12,10 +12,14 @@ import androidx.window.WindowManager
 import ca.on.sudbury.hojat.smartcamera.R
 import ca.on.sudbury.hojat.smartcamera.utils.CameraTimer
 import ca.on.sudbury.hojat.smartcamera.utils.Constants
+import timber.log.Timber
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 
 class CameraViewModel(private val useCase: CameraUseCase) : ViewModel() {
 
@@ -69,6 +73,37 @@ class CameraViewModel(private val useCase: CameraUseCase) : ViewModel() {
                 requestCode
             )
         }
+    }
+
+    /**
+     *  [androidx.camera.core.ImageAnalysis.Builder] requires enum value of
+     *  [androidx.camera.core.AspectRatio]. Currently it has values of 4:3 & 16:9.
+     *
+     *  Detecting the most suitable ratio for dimensions provided in @params by counting absolute
+     *  of preview ratio to one of the provided values.
+     *
+     *  @return suitable aspect ratio
+     */
+    fun getAspectRatio(): Int {
+
+        // get the current screen metrics
+        val metrics = windowManager.getCurrentWindowMetrics().bounds
+        // width: preview width
+        // height: preview height
+        val width = metrics.width()
+        val height = metrics.height()
+        Timber.d("Screen metrics: $width x $height")
+
+        val previewRatio = max(width, height).toDouble() / min(width, height)
+        val aspectRatio: Int
+        if (abs(previewRatio - Constants.RATIO_4_3_VALUE) <= abs(previewRatio - Constants.RATIO_16_9_VALUE)) {
+            aspectRatio = AspectRatio.RATIO_4_3
+            Timber.d("Preview aspect ratio: $aspectRatio")
+        } else {
+            aspectRatio = AspectRatio.RATIO_16_9
+            Timber.d("Preview aspect ratio: $aspectRatio")
+        }
+        return aspectRatio
     }
 
     companion object {
