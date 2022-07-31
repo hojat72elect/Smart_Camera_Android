@@ -49,6 +49,7 @@ abstract class BaseFragment : Fragment {
      * It is called after initializing view and restoring state ie. after [onViewInitialized] and [onRestoreViewState]
      * This callback is specific to MVVM pattern.
      */
+    @Deprecated("Using this for registering listeners with Flows will cause data leaks.")
     open fun onInitializeObservers() {}
 
     /**
