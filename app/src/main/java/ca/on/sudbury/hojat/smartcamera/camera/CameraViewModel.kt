@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.window.WindowManager
@@ -15,7 +16,6 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
-
 
 class CameraViewModel(private val useCase: CameraUseCase) : ViewModel() {
 
@@ -57,8 +57,18 @@ class CameraViewModel(private val useCase: CameraUseCase) : ViewModel() {
     // and UseCase (don't need it for now).
     fun sayHello() = "${useCase.sayHello()}\nwas performed in $this"
 
-    override fun onCleared() {
-        super.onCleared()
+    /**
+     * Fragment calls this function in order to ask user for granting required permissions.
+     */
+    fun askPermissions(context: Context, requestSource: Fragment, requestCode: Int) {
+        if (!hasPermissions(context)) {
+            // If permissions have already been granted, proceed
+            // Request camera-related permissions
+            requestSource.requestPermissions(
+                Constants.PERMISSIONS_REQUIRED,
+                requestCode
+            )
+        }
     }
 
     companion object {

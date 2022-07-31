@@ -61,7 +61,6 @@ typealias LumaListener = (luma: Double) -> Unit
 
 private const val PERMISSIONS_REQUEST_CODE = 10
 
-
 /**
  * Main fragment for this app. Implements all camera operations including:
  * - Viewfinder
@@ -117,7 +116,7 @@ class CameraFragment : Fragment() {
         // Make sure that all permissions are still present, since the
         // user could have removed them while the app was in paused state.
         if (!CameraViewModel.hasPermissions(requireContext())) {
-            askForPermissions(requireContext())
+            vm.askPermissions(requireContext(), this, PERMISSIONS_REQUEST_CODE)
         }
     }
 
@@ -133,18 +132,10 @@ class CameraFragment : Fragment() {
         displayManager.unregisterDisplayListener(displayListener)// this will remain in fragment
     }
 
-    private fun askForPermissions(context: Context) {
-        if (!CameraViewModel.hasPermissions(context)) {
-            // If permissions have already been granted, proceed
-            // Request camera-related permissions
-            requestPermissions(Constants.PERMISSIONS_REQUIRED, PERMISSIONS_REQUEST_CODE)
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        askForPermissions(requireContext())
+        vm.askPermissions(requireContext(), this, PERMISSIONS_REQUEST_CODE)
 
     }
 
@@ -172,7 +163,8 @@ class CameraFragment : Fragment() {
                     "Permissions are required for the app to work correctly",
                     Toast.LENGTH_SHORT
                 ).show()
-                askForPermissions(requireContext())
+                vm.askPermissions(requireContext(), this, PERMISSIONS_REQUEST_CODE)
+
             }
         }
 
